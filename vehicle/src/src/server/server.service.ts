@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateServerDto } from './dto/create-server.dto';
 import { UpdateServerDto } from './dto/update-server.dto';
 import { Servers, ServersDocument } from './schemas/server.schema';
+import * as disk from 'diskusage';
 
 @Injectable()
 export class ServerService {
@@ -42,7 +43,7 @@ export class ServerService {
   async findAll(): Promise<Servers[]> {
     return this.serversModel.find().exec();
   }
-
+              //ENCONTRAR 1 APENAS
   async findOne(id: string): Promise<Servers> {
     const server = await this.serversModel.findById(id).exec();
     if (!server) {
@@ -109,5 +110,21 @@ export class ServerService {
     this.backup = null;
     
     return `Server with id: ${id} deleted`;
+  }
+
+  async getDiskUsage(): Promise<{ total: number; free: number; used: number }> {
+    return new Promise((resolve, reject) => {
+      disk.check('/', (err, info) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({
+            total: info.total,
+            free: info.free,
+            used: info.total - info.free
+          });
+        }
+      });
+    });
   }
 }

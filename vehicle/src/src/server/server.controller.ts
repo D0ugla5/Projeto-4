@@ -17,10 +17,10 @@ export class ServerController {
     return this.serverService.findAll();
   }
 
-  @Get(':id')
+ /*  @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.serverService.findOne(id);
-  }
+  } */
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateServerDto: UpdateServerDto) {
@@ -35,5 +35,10 @@ export class ServerController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.serverService.remove(id);
+  }
+
+  @Get('disk-usage')
+  async getDiskUsage() {
+    return this.serverService.getDiskUsage();
   }
 }
