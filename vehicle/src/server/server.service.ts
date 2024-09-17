@@ -1,39 +1,113 @@
-import { Injectable, NotFoundException, BadRequestException, HttpException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateServerDto } from './dto/create-server.dto';
 import { UpdateServerDto } from './dto/update-server.dto';
-import { Servers, ServersDocument} from './schemas/server-schema';
-import { Model } from 'mongoose';
-
+import { Servers, ServersDocument } from './schemas/server.schema';
+import * as disk from 'diskusage';
 
 @Injectable()
 export class ServerService {
-    //A criação deve conter um armazenamento da primeira versão 
-    constructor(@InjectModel(Servers.name) private serversModel: Model<ServersDocument>) {}
-  
+
+  // Propriedade para armazenar o backup temporário
+  private backup: ServersDocument | null = null;
+
+  constructor(@InjectModel(Servers.name) private serversModel: Model<ServersDocument>) {}
+
   async create(createServerDto: CreateServerDto): Promise<Servers> {
-  
-    const newServers = new this.serversModel({
-      ...createServerDto,
+    const newServer = new this.serversModel(createServerDto);
+    
+    // Validação de server
+      // Salva o backup do servidor antes de salvar o novo servidor
+      this.backup = await newServer.save();  // Salva o backup do novo servidor
+      return newServer;
+  }
+
+  async findAll(): Promise<Servers[]> {
+    return this.serversModel.find().exec();
+  }
+              //ENCONTRAR 1 APENAS (Opcional)
+  async findOne(id: string): Promise<Servers> {
+    const server = await this.serversModel.findById(id).exec();
+    if (!server) {
+      throw new NotFoundException(`Server with id ${id} not found`);
+    }
+    return server;
+  }
+
+  async update(id: string, updateServerDto: UpdateServerDto): Promise<Servers> {
+    // Salva o backup do servidor atual
+    const currentServer = await this.serversModel.findById(id).exec();
+    if (!currentServer) {
+      throw new NotFoundException(`Server with id ${id} not found`);
+    }
+    this.backup = currentServer;
+
+    // Atualiza o servidor
+    const updatedServer = await this.serversModel.findByIdAndUpdate(
+      id,
+      updateServerDto,
+      { new: true, runValidators: true }
+    ).exec();
+
+    if (!updatedServer) {
+      throw new BadRequestException('Error updating server.');
+    }
+
+    return updatedServer;
+  }
+
+  async default(id: string): Promise<Servers> {
+    // Verifica se o backup está disponível
+    if (!this.backup) {
+      throw new BadRequestException('No backup found to revert to.');
+    }
+
+    // Verifica se o servidor existe
+    const existingServer = await this.serversModel.findById(id).exec();
+    if (!existingServer) {
+      throw new NotFoundException(`Server with id ${id} not found`);
+    }
+
+    // Reverte para o backup
+    const updatedServer = await this.serversModel.findByIdAndUpdate(
+      id,
+      this.backup.toObject(),
+      { new: true, runValidators: true }
+    ).exec();
+
+    if (!updatedServer) {
+      throw new BadRequestException('Error updating server to default state.');
+    }
+
+    return updatedServer;
+  }
+
+  async remove(id: string): Promise<string> {
+    const deleted = await this.serversModel.findByIdAndDelete(id).exec();
+    if (!deleted) {
+      throw new NotFoundException(`Server with id ${id} not found or already deleted!`);
+    }
+
+    // Limpa o backup após deltado
+    this.backup = null;
+    
+    return `Server with id: ${id} deleted`;
+  }
+
+  async getDiskUsage(): Promise<{ total: number; free: number; used: number }> {
+    return new Promise((resolve, reject) => {
+      disk.check('/', (err, info) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({
+            total: info.total,
+            free: info.free,
+            used: info.total - info.free
+          });
+        }
+      });
     });
-    //testando
-    console.log('Using insert');
-    return newServers.save();
-  }
-
-  findAll() {
-    return `This action returns all server`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} server`;
-  }
-
-  update(id: number, updateServerDto: UpdateServerDto) {
-    return `This action updates a #${id} server`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} server`;
   }
 }
