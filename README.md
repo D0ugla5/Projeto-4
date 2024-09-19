@@ -18,6 +18,7 @@ Para acessar esse método será necessário utilizar do Postman ou Insominia:
 *C*
 _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse objeto precissa dos seguinte parâmetros:
 {
+
   *databasePort: number;
   *kafkaPort: number;
   *webserverPort: number;
@@ -25,6 +26,7 @@ _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse obje
   serverAddress: string;
   storageDirectory: string; // deve ser um folder
   emailAddress: string;
+  
 }
 *Todos os ports devem ser diferente, no mesmo objeto e devem ser um número entre 1 e 65535.
 Cada validação foi testada e confirmada sua veracidade!
