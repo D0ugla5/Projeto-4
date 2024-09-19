@@ -20,14 +20,21 @@ _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse obje
 {
 
   *databasePort: number;
+  
   *kafkaPort: number;
+  
   *webserverPort: number;
+  
   *iotHandlerPort: number;
+  
   serverAddress: string;
+  
   storageDirectory: string; // deve ser um folder
+  
   emailAddress: string;
   
 }
+
 *Todos os ports devem ser diferente, no mesmo objeto e devem ser um número entre 1 e 65535.
 Cada validação foi testada e confirmada sua veracidade!
 
