@@ -11,9 +11,10 @@ Todas as funcionalidades CRUD estão funcionando conforme pedido, e realizam as 
 Para entrar no banco e acessar cada funcionalidade você precisara de um nome e senha além do Link para entrar, solicite na aba de mensagens do gitHUb :)
 
 Vamos começar com o primeiro método CRUD -
-        *<<<<<Create>>>>>*
+        *Create*
 
 Para acessar esse método será necessário utilizar do Postman ou Insominia:
+
 *C*
 _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse objeto precissa dos seguinte parâmetros:
 {
@@ -46,6 +47,7 @@ Exemplo de Objeto criado.
     *_id Personalizado
 
 Teremos dois U's e vou responder em breve o porque!
+
 *U*
 _Patch_ -> Esse método atualizara o objeto desejado, sendo buscado por meio do seu *id*, então você utilizara do método _Get_, copiara o id e colocara após o local de acesso no URL:
 (Exemplo de URL)
