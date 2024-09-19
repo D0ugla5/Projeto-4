@@ -89,3 +89,13 @@ http://localhost:2187/servers/66e9b804634ead71a13e45eb/default
 
 D
 _Del_-> Esse método deleta o objeto! Use direito, pois para esse não existe backup!
+
+Se Você chegou até aqui você quer realmente deletar esse objeto né!?
+
+Vamos lá!
+
+Para deletar basta utilizar do método Del e inserir o mesmo link inserido em patch!
+
+E è isso essas são todas as funcionalidades desse software no demais é bom pra testar conhecimento e aprimorar em TS, Mongodb, CRUD e as funcionalidades de bancos de dados NoSQL.
+
+🤠🤠🤠🤠🤠🤠🤠🤠 DGOut!
