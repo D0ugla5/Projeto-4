@@ -40,7 +40,7 @@ _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse obje
 Cada validação foi testada e confirmada sua veracidade!
 
 *R*
-_Get_ -> Esse método mostrará todos os objetos criados no banco de dados.
+_Get_ -> Esse método mostrará todos os objetos da aplicação criados no banco de dados.
 O Mongo criou um ID personalizado para cada objeto criado, é ele que utilizaremos para acessar os próximos dois métodos. 
 Exemplo de Objeto criado.
 
