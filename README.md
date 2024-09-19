@@ -73,14 +73,18 @@ Teremos dois U's e vou responder em breve o porque!
 
 *U*
 _Patch_ -> Esse método atualizara o objeto desejado, sendo buscado por meio do seu *id*, então você utilizara do método _Get_, copiara o id e colocara após o local de acesso no URL:
+
 (Exemplo de URL)
+
 _http://localhost:2187/servers/66e9b71e634ead71a13e45e2_
 
 Atualize a informação que quiser seguindo cada validação para que não ocorra erros.
 
 _Put_ -> Esse método altera o objeto para sua primeira versão, a versão que você inseriu lá no _Post_. Atualizou no Patch e ficou como não era para ficar e não lembra como estava antes use do _Put_ para voltar ao backup original.
 Para acessar o put você precisara colocar igual no Patch com um porém o default após o _id_
+
 (Exemplo de URL)
+
 http://localhost:2187/servers/66e9b804634ead71a13e45eb/default
 
 D
