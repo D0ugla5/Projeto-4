@@ -17,23 +17,24 @@ Para acessar esse método será necessário utilizar do Postman ou Insominia:
 
 *C*
 _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse objeto precissa dos seguinte parâmetros:
-{
 
-  *databasePort: number;
-  
-  *kafkaPort: number;
-  
-  *webserverPort: number;
-  
-  *iotHandlerPort: number;
-  
-  serverAddress: string;
-  
-  storageDirectory: string; // deve ser um folder
-  
-  emailAddress: string;
-  
-}
+        {
+        
+        "databasePort": 1,
+        
+        "kafkaPort": 2,
+        
+        "webserverPort": 3,
+        
+        "iotHandlerPort": 4,
+        
+        "serverAddress": "http://exaapaleu.br",
+        
+        "storageDirectory": "/exaample/folader",
+        
+        "emailAddress": "aaau1@gmail.com",
+        
+        }
 
 *Todos os ports devem ser diferente, no mesmo objeto e devem ser um número entre 1 e 65535.
 Cada validação foi testada e confirmada sua veracidade!
@@ -44,7 +45,8 @@ O Mongo criou um ID personalizado para cada objeto criado, é ele que utilizarem
 Exemplo de Objeto criado.
 
 
-        {*"_id": "66e9b804634ead71a13e45eb",
+        {
+        *"_id": "66e9b804634ead71a13e45eb",
         
         "databasePort": 1,
         
