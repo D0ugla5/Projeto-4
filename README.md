@@ -43,9 +43,8 @@ _Get_ -> Esse método mostrará todos os objetos criados no banco de dados.
 O Mongo criou um ID personalizado para cada objeto criado, é ele que utilizaremos para acessar os próximos dois métodos. 
 Exemplo de Objeto criado.
 
-{
 
-        *"_id": "66e9b804634ead71a13e45eb",
+        {*"_id": "66e9b804634ead71a13e45eb",
         
         "databasePort": 1,
         
@@ -63,7 +62,8 @@ Exemplo de Objeto criado.
         
         "__v": 0
         
-    }
+        }
+        
     *_id Personalizado
     
 
