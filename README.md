@@ -98,4 +98,4 @@ Para deletar basta utilizar do método Del e inserir o mesmo link inserido em pa
 
 E è isso essas são todas as funcionalidades desse software no demais é bom pra testar conhecimento e aprimorar em TS, Mongodb, CRUD e as funcionalidades de bancos de dados NoSQL.
 
-🤠🤠🤠🤠🤠🤠🤠🤠 DGOut!
+🤠🤠🤠🤠🤠🤠🤠🤠 🤠🤠🤠🤠🤠🤠🤠 DGOut!
