@@ -103,6 +103,30 @@ _http://localhost:2187/servers/66e9b71e634ead71a13e45e2_
 
 Atualize a informação que quiser seguindo cada validação para que não ocorra erros.
 
+Pelo seguinte código:
+
+    async update(id: string, updateServerDto: UpdateServerDto): Promise<Servers> {
+    // Salva o backup do servidor atual
+    const currentServer = await this.serversModel.findById(id).exec();
+    if (!currentServer) {
+      throw new NotFoundException(`Server with id ${id} not found`);
+    }
+    this.backup = currentServer;
+
+    // Atualiza o servidor
+    const updatedServer = await this.serversModel.findByIdAndUpdate(
+      id,
+      updateServerDto,
+      { new: true, runValidators: true }
+    ).exec();
+
+    if (!updatedServer) {
+      throw new BadRequestException('Error updating server.');
+    }
+
+    return updatedServer;
+    }
+    
 _Put_ -> Esse método altera o objeto para sua primeira versão, a versão que você inseriu lá no _Post_. Atualizou no Patch e ficou como não era para ficar e não lembra como estava antes use do _Put_ para voltar ao backup original.
 Para acessar o put você precisara colocar igual no Patch com um porém o default após o _id_
 
@@ -110,6 +134,34 @@ Para acessar o put você precisara colocar igual no Patch com um porém o defaul
 
 http://localhost:2187/servers/66e9b804634ead71a13e45eb/default
 
+Pelo seguinte código:
+
+    async default(id: string): Promise<Servers> {
+    // Verifica se o backup está disponível
+    if (!this.backup) {
+      throw new BadRequestException('No backup found to revert to.');
+    }
+
+    // Verifica se o servidor existe
+    const existingServer = await this.serversModel.findById(id).exec();
+    if (!existingServer) {
+      throw new NotFoundException(`Server with id ${id} not found`);
+    }
+
+    // Reverte para o backup
+    const updatedServer = await this.serversModel.findByIdAndUpdate(
+      id,
+      this.backup.toObject(),
+      { new: true, runValidators: true }
+    ).exec();
+
+    if (!updatedServer) {
+      throw new BadRequestException('Error updating server to default state.');
+    }
+
+    return updatedServer;
+    }
+    
 D
 _Del_-> Esse método deleta o objeto! Use direito, pois para esse não existe backup!
 
@@ -119,6 +171,42 @@ Vamos lá!
 
 Para deletar basta utilizar do método Del e inserir o mesmo link inserido em patch!
 
+Pelo seguinte código:
+
+    async remove(id: string): Promise<string> {
+    const deleted = await this.serversModel.findByIdAndDelete(id).exec();
+    if (!deleted) {
+      throw new NotFoundException(`Server with id ${id} not found or already deleted!`);
+    }
+
+    // Limpa o backup após deltado
+    this.backup = null;
+    
+    return `Server with id: ${id} deleted`;
+    }
+
+Pelo seguinte código você consiguira acessa ao disk-usage do seu PC acredite isso faz a diferença no código só não sei como, mas faz!
+
+    async getDiskUsage(): Promise<{ total: number; free: number; used: number }> {
+        return new Promise((resolve, reject) => {
+          disk.check('/', (err, info) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve({
+                total: info.total,
+                free: info.free,
+                used: info.total - info.free
+              });
+            }
+          });
+        });
+      }
+    
 E è isso essas são todas as funcionalidades desse software no demais é bom pra testar conhecimento e aprimorar em TS, Mongodb, CRUD e as funcionalidades de bancos de dados NoSQL.
 
-🤠🤠🤠🤠🤠🤠🤠🤠 🤠🤠🤠🤠🤠🤠🤠 DGOut!
+Tive uma melhora bem significativa com o JS principlamente em entender como cada informação passa pelo código e as interações que acontece por trás de cada Query.
+Observei que tive uma melhora bastante boa em achar erros e problemas que podem estar acontecendo para que a aplicação ocorra corretamente em cada requisição.
+
+*_DGOut!_*
+🤠🤠🤠🤠🤠🤠🤠🤠 🤠🤠🤠🤠🤠🤠🤠 
