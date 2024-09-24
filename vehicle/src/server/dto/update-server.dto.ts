@@ -1,44 +1,50 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateServerDto } from './create-server.dto';
-import { IsNumber, IsEmpty, IsPort, IsString, IsIP, IsEmail, IsUrl } from "class-validator";
-import{  } from "class-transformer";
 
 
+import { IsString, IsEmail, IsUrl, IsOptional } from "class-validator";
+import { IsPort } from "../validacoes/isPort";
+import { IsFolderPath } from "../validacoes/isFolderPath";
+import { ArePortsUnique } from "../validacoes/ArePortsUnique";
 
-export class UpdateServerDto extends PartialType(CreateServerDto) {
+//A Porta Kafka já está sendo utilizada logo não pode estar sendo utilizada novamente
 
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    databasePort: Number;
-
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    kafkaPort: Number;
-
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    webserverPort: Number;
-
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    iotHandlerPort: Number;
-
-    @IsString()
-    @IsEmpty()
-    @IsUrl()
-    @IsIP()
-    serverAddress: String; //Formato de endereço ou de Ip
-
-    @IsString()
-    @IsEmpty()
-    storageDirectory: String; // /example/folder
+export class UpdateServerDto {
     
+    @IsOptional()
+    @IsPort()
+    @ArePortsUnique()
+    databasePort?: Number;
+
+    
+    @IsOptional()
+    @IsPort()
+    @ArePortsUnique()
+    kafkaPort?: Number;
+  
+    
+    
+    @IsOptional()
+    @IsPort()
+    @ArePortsUnique()
+    webserverPort?: Number;
+  
+    
+    @IsOptional()
+    @IsPort()
+    @ArePortsUnique()
+    iotHandlerPort?: Number;
+  
+    @IsOptional()
+    @IsString()
+    @IsUrl()
+    serverAddress?: String;
+  
+    @IsOptional()
+    @IsString()
+    @IsFolderPath({ message: 'storageDirectory must be a valid folder path' })
+    storageDirectory?: String; // deve ser um folder /example/folder
+      
+    @IsOptional()
     @IsString()
     @IsEmail()
-    @IsEmpty()
-    emailAdress: String
+    emailAddress?: String
 }

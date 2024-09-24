@@ -1,41 +1,47 @@
-
-import { IsNumber, IsEmpty, IsPort, IsString, IsIP, IsEmail, IsUrl } from "class-validator";
+import { IsString, IsEmail, IsUrl, IsNotEmpty, IsInt, } from 'class-validator';
+import { IsFolderPath } from '../validacoes/isFolderPath';
+import { IsPort } from '../validacoes/isPort';
+import { ArePortsUnique } from '../validacoes/ArePortsUnique';
 
 
 export class CreateServerDto {
-    //ports não podem repetir
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    databasePort: Number;
+  @IsInt()
+  @IsNotEmpty()
+  @IsPort()
+  @ArePortsUnique()
+  databasePort: number;
 
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    kafkaPort: Number;
+  @IsInt()
+  @IsNotEmpty()
+  @IsPort()
+  @ArePortsUnique()
+  kafkaPort: number;
 
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    webserverPort: Number;
+  //@IsInt({min: 1, máx: 65535})
+  @IsInt()
+  @IsNotEmpty()
+  @IsPort()
+  @ArePortsUnique()
+  webserverPort: number;
 
-    @IsNumber()
-    @IsEmpty()
-    @IsPort()
-    iotHandlerPort: Number;
+  @IsInt()
+  @IsNotEmpty()
+  @IsPort()
+  @ArePortsUnique()
+  iotHandlerPort: number;
 
-    @IsString()
-    @IsEmpty()
-    @IsUrl()
-    @IsIP()
-    serverAddress: String; //Formato de endereço ou de Ip
+  @IsString()
+  @IsNotEmpty()
+  @IsUrl()
+  serverAddress: string;
 
-    @IsString()
-    @IsEmpty()
-    storageDirectory: String; // /example/folder
-    
-    @IsString()
-    @IsEmail()
-    @IsEmpty()
-    emailAdress: String
+  @IsString()
+  @IsNotEmpty()
+  @IsFolderPath({ message: 'storageDirectory must be a valid folder path' })
+  storageDirectory: string; // deve ser um folder /example/folder
+
+  @IsString()
+  @IsEmail()
+  @IsNotEmpty()
+  emailAddress: string;
 }

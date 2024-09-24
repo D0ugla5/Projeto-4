@@ -1,1 +1,3 @@
-export class Server {}
+
+export class Vehicle {
+}
