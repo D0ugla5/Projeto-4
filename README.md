@@ -84,7 +84,13 @@ Exemplo de Objeto criado.
         }
         
     *_id Personalizado
-    
+
+  Por meio do seguinte código:
+          
+          async findAll(): Promise<Servers[]> {
+          
+            return this.serversModel.find().exec();
+          }
 
 Teremos dois U's e vou responder em breve o porque!
 
