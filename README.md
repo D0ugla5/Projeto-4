@@ -39,6 +39,23 @@ _Post_ -> Esse método adiciona um objeto ao banco de dados (MongoDB), esse obje
 *Todos os ports devem ser diferente, no mesmo objeto e devem ser um número entre 1 e 65535.
 Cada validação foi testada e confirmada sua veracidade!
 
+  Por meio desse código:
+  
+    export class ServerService {
+    // Propriedade para armazenar o backup temporário
+    private backup: ServersDocument | null = null;
+  
+    constructor(@InjectModel(Servers.name) private serversModel: Model<ServersDocument>) {}
+  
+    async create(createServerDto: CreateServerDto): Promise<Servers> {
+      const newServer = new this.serversModel(createServerDto);
+    
+    // Validação de server
+      // Salva o backup do servidor antes de salvar o novo servidor
+      this.backup = await newServer.save();  // Salva o backup do novo servidor
+      return newServer;
+      }
+  
 *R*
 _Get_ -> Esse método mostrará todos os objetos da aplicação criados no banco de dados.
 O Mongo criou um ID personalizado para cada objeto criado, é ele que utilizaremos para acessar os próximos dois métodos. 
