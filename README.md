@@ -209,4 +209,5 @@ Tive uma melhora bem significativa com o JS principlamente em entender como cada
 Observei que tive uma melhora bastante boa em achar erros e problemas que podem estar acontecendo para que a aplicação ocorra corretamente em cada requisição.
 
 *_DGOut!_*
+
 🤠🤠🤠🤠🤠🤠🤠🤠 🤠🤠🤠🤠🤠🤠🤠 
