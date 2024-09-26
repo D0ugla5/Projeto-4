@@ -207,7 +207,7 @@ Pelo seguinte código você consiguira acessa ao disk-usage do seu PC acredite i
     
 E è isso essas são todas as funcionalidades desse software no demais é bom pra testar conhecimento e aprimorar em TS, Mongodb, CRUD e as funcionalidades de bancos de dados NoSQL.
 
-#Aprofundando dentro do Cód
+# Aprofundando dentro do Cód
 
 Propriedades e Construtor
 
