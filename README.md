@@ -207,6 +207,165 @@ Pelo seguinte código você consiguira acessa ao disk-usage do seu PC acredite i
     
 E è isso essas são todas as funcionalidades desse software no demais é bom pra testar conhecimento e aprimorar em TS, Mongodb, CRUD e as funcionalidades de bancos de dados NoSQL.
 
+#Aprofundando dentro do Cód
+
+Propriedades e Construtor
+
+    @Injectable()
+    export class ServerService {
+    
+      // Propriedade para armazenar o backup temporário
+      private backup: ServersDocument | null = null;
+    
+      constructor(@InjectModel(Servers.name) private serversModel: Model<ServersDocument>) {}
+    }
+
+backup: Esta propriedade armazena um backup temporário do documento do servidor.
+serversModel: É o modelo Mongoose injetado para manipular os documentos da coleção Servers no banco de dados.
+
+Método create
+
+    async create(createServerDto: CreateServerDto): Promise<Servers> {
+      const newServer = new this.serversModel(createServerDto);
+      
+      // Validação de server
+      // Salva o backup do servidor antes de salvar o novo servidor
+      this.backup = await newServer.save();  // Salva o backup do novo servidor
+      return newServer;
+    }
+
+Cria um novo servidor a partir dos dados fornecidos (createServerDto).
+Salva o novo servidor no banco de dados.
+Armazena o servidor recém-criado na propriedade backup.
+
+Método findAll
+
+
+    async findAll(): Promise<Servers[]> {
+      return this.serversModel.find().exec();
+    }
+
+Retorna todos os servidores da coleção Servers.
+
+Método findOne
+
+    async findOne(id: string): Promise<Servers> {
+      const server = await this.serversModel.findById(id).exec();
+      if (!server) {
+        throw new NotFoundException(`Server with id ${id} not found`);
+      }
+      return server;
+    }
+
+Busca um servidor específico pelo id.
+Lança uma exceção NotFoundException se o servidor não for encontrado.
+
+Método update
+
+    async update(id: string, updateServerDto: UpdateServerDto): Promise<Servers> {
+      // Salva o backup do servidor atual
+      const currentServer = await this.serversModel.findById(id).exec();
+      if (!currentServer) {
+        throw new NotFoundException(`Server with id ${id} not found`);
+      }
+      this.backup = currentServer;
+
+  // Atualiza o servidor
+        
+        const updatedServer = await this.serversModel.findByIdAndUpdate(
+          id,
+          updateServerDto,
+          { new: true, runValidators: true }
+        ).exec();
+      
+        if (!updatedServer) {
+          throw new BadRequestException('Error updating server.');
+        }
+      
+        return updatedServer;
+      }
+
+Faz um backup do servidor atual antes de atualizá-lo.
+Atualiza o servidor com os novos dados (updateServerDto).
+Lança exceções NotFoundException ou BadRequestException conforme necessário.
+
+Método default
+
+typescript
+
+    async default(id: string): Promise<Servers> {
+      // Verifica se o backup está disponível
+      if (!this.backup) {
+        throw new BadRequestException('No backup found to revert to.');
+      }
+    
+      // Verifica se o servidor existe
+      const existingServer = await this.serversModel.findById(id).exec();
+      if (!existingServer) {
+        throw new NotFoundException(`Server with id ${id} not found`);
+      }
+    
+      // Reverte para o backup
+      const updatedServer = await this.serversModel.findByIdAndUpdate(
+        id,
+        this.backup.toObject(),
+        { new: true, runValidators: true }
+      ).exec();
+    
+      if (!updatedServer) {
+        throw new BadRequestException('Error updating server to default state.');
+      }
+    
+      return updatedServer;
+    }
+
+Verifica se há um backup disponível.
+Verifica se o servidor existe.
+Reverte o servidor para o estado armazenado no backup.
+Lança exceções conforme necessário.
+
+Método remove
+
+    async remove(id: string): Promise<string> {
+      const deleted = await this.serversModel.findByIdAndDelete(id).exec();
+      if (!deleted) {
+        throw new NotFoundException(`Server with id ${id} not found or already deleted!`);
+      }
+    
+      // Limpa o backup após deletado
+      this.backup = null;
+      
+      return `Server with id: ${id} deleted`;
+    }
+
+Remove um servidor pelo id.
+Limpa o backup após a exclusão.
+Lança uma exceção NotFoundException se o servidor não for encontrado.
+
+Método getDiskUsage
+
+    async getDiskUsage(): Promise<{ total: number; free: number; used: number }> {
+      return new Promise((resolve, reject) => {
+        disk.check('/', (err, info) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({
+              total: info.total,
+              free: info.free,
+              used: info.total - info.free
+            });
+          }
+        });
+      });
+    }
+
+Verifica o uso do disco no sistema de arquivos raiz (/).
+Retorna um objeto com as informações de espaço total, livre e usado.
+
+Cada método tem uma responsabilidade clara e lança exceções apropriadas para lidar com situações de erro. Isso garante que o serviço ServerService manipule os servidores de forma robusta e resiliente.
+
+
 Tive uma melhora bem significativa com o JS principlamente em entender como cada informação passa pelo código e as interações que acontece por trás de cada Query.
 Observei que tive uma melhora bastante boa em achar erros e problemas que podem estar acontecendo para que a aplicação ocorra corretamente em cada requisição.
 
