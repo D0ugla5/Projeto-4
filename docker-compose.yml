@@ -4,5 +4,4 @@ services:
     image: server-status:v1.0
     container_name: server-status-poc
     ports:
-      - "2187:2187"
-    command: ["npm", "run", "start:dev"]
+      - "3100:3100"
